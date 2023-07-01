@@ -20,7 +20,7 @@ class InventoryError(Exception):
 
 class ResourceExhaustedError(InventoryError):
     """
-    Raised when an action is tried on an exhausted set of items
+    Raised when an action is tried on an exhausted set of items.
     """
     def __init__(self, *args):
         super().__init__(*args)
@@ -44,7 +44,7 @@ class MinimumResourceError(InventoryError):
 
 class InvalidInventoryAction(InventoryError):
     """
-    Raised when an invalid inventory action is called
+    Raised when an invalid inventory action is called.
     """
     def __init__(self, *args):
         super().__init__(*args)
