@@ -2,7 +2,7 @@
 import pytest
 
 from app.models import inventory
-from app.models.inventory_exceptions import MinimumResourceError
+from app.models.inventory_exceptions import MinimumResourceError, ResourceExhaustedError, InsufficientResourceError
 
 
 @pytest.fixture
@@ -56,9 +56,10 @@ def test_claim(resource):
     assert resource.allocated == allocated + n
 
 
-@pytest.mark.parametrize('value', [-1, 0, 21])
-def test_invalid_claim_qty(resource, value):
-    with pytest.raises(MinimumResourceError):
+@pytest.mark.parametrize('value, exception',
+                         [(0, MinimumResourceError), (-1, MinimumResourceError), (21, InsufficientResourceError)])
+def test_invalid_claim_qty(resource, exception, value):
+    with pytest.raises(exception):
         resource.claim(value)
 
 
@@ -71,9 +72,10 @@ def test_free_up(resource):
     assert allocated == resource.allocated + n
 
 
-@pytest.mark.parametrize('value', [0, 16, -2])
-def test_invalid_free_up_qty(resource, value):
-    with pytest.raises(MinimumResourceError):
+@pytest.mark.parametrize('value, exception',
+                         [(0, MinimumResourceError), (16, InsufficientResourceError)])
+def test_invalid_free_up_qty(resource, value, exception):
+    with pytest.raises(exception):
         resource.free_up(value)
 
 
@@ -86,9 +88,10 @@ def test_die(resource):
     assert allocated == resource.allocated + n
 
 
-@pytest.mark.parametrize('value', [0, -2, 21])
-def test_invalid_die_qty(resource, value):
-    with pytest.raises(MinimumResourceError):
+@pytest.mark.parametrize('value, exception',
+                         [(0, MinimumResourceError), (-1, MinimumResourceError), (21, InsufficientResourceError)])
+def test_invalid_die_qty(resource, exception, value):
+    with pytest.raises(exception):
         resource.die(value)
 
 
@@ -101,10 +104,10 @@ def test_purchase(resource):
     assert available == resource.available - n
 
 
-@pytest.mark.parametrize('value', [0, -2, 21])
+@pytest.mark.parametrize('value', [0, -2])
 def test_invalid_purchase_qty(resource, value):
     with pytest.raises(MinimumResourceError):
-        resource.die(value)
+        resource.purchase(value)
 
 
 

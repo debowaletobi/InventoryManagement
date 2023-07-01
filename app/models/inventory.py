@@ -89,10 +89,10 @@ class Resource:
         return str(self.__class__.__name__).lower()
 
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.manufacturer}'
 
     def __repr__(self):
-        return f'{self.name} {self.category} by {self.manufacturer}'
+        return f'Resource Object: {self.name} {self.category} by {self.manufacturer}'
 
     def claim(self, n=1):
         """
@@ -222,7 +222,7 @@ class CPU(Resource):
 class Storage(Resource):
 
     def __init__(self, name: str, manufacturer: str, total: int,
-                 allocated: int, capacity_gb, _min: int = 0):
+                 allocated: int, capacity_gb: float, _min: int = 0):
         """
 
         Args:
@@ -237,8 +237,23 @@ class Storage(Resource):
             'allocated' cannot be greater than 'total'
         """
         super(). __init__(name, manufacturer, total, allocated, _min)
-        self._capacity_gb = capacity_gb
+        assert isinstance(capacity_gb, (float, int))
+        assert capacity_gb > 0
+        self._capacity_gb = float(capacity_gb)
+
+    @property
+    def capacity_gb(self):
+        """
+        Storage capacity in gigabytes
+        Returns:
+           float
+        """
+        return self._capacity_gb
+
+    def __str__(self):
+        return f'{self.name} - {self.manufacturer}, {self.capacity_gb}GB'
+
+    def __repr__(self):
+        return f'Storage Object: {self.name} - upper({self.manufacturer}), {self.capacity_gb}GB'
 
 
-cpu_x = Resource('cpu', 'ASUS', 20, 12,4)
-print(getattr(cpu_x,'name'))

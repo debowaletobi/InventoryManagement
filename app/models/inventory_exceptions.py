@@ -20,25 +20,32 @@ class InventoryError(Exception):
 
 class ResourceExhaustedError(InventoryError):
     """
-    Raised when a user tries to claim an exhausted resource item
+    Raised when an action is tried on an exhausted set of items
     """
+    def __init__(self, *args):
+        super().__init__(*args)
 
 
-class InsufficientError(InventoryError):
+class InsufficientResourceError(InventoryError):
     """
-    Raised when a user tries to take a number of resource that's more than available
+    Raised when a user tries to take a number of resource that's more than available.
     """
+    def __init__(self, *args):
+        super().__init__(*args)
 
 
 class MinimumResourceError(InventoryError):
     """
-        Raised when an action would result in the violation of minimum units of resource to be kept in store
-            e.g. if min units to be kept in store is 2 and total in store is 4,
-            attempting to claim 3 units from store would result in MinimumResourceError
+        Raised when an action tries to take from /add less than the minimum allowable amount to a set of items.
         """
+    def __init__(self, *args):
+        super().__init__(*args)
 
 
 class InvalidInventoryAction(InventoryError):
     """
-    Raised when an invalid action is
+    Raised when an invalid inventory action is called
     """
+    def __init__(self, *args):
+        super().__init__(*args)
+
